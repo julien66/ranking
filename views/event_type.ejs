@@ -1,0 +1,62 @@
+<form action="/events/type" method="post">
+    <div class="alert alert-primary" role="alert">
+        Add a custom type of event here. It will be available trought the <a class="link-dark" href="/events/add">event form</a> then.
+    </div>
+
+    <div class="input-group mb-3">
+        <span class="input-group-text">Event type name</span>
+        <input type="text" class="form-control" name="name" required aria-describedby="">
+    </div>
+    <div class="form-text">Enter your event type name. It must be unique. Eg. Race to goal, race to points.</div>
+    <br>
+    <div class="input-group mb-3">
+        <span class="input-group-text">Event type description</span>
+        <input type="text" class="form-control" name="description" required aria-describedby="">
+    </div>
+    <div class="form-text">Add a short description that make this type of event so special.</div>
+    <br>
+    <div class="input-group mb-3">
+        <span class="input-group-text">Event type color</span>
+        <input type="color" name="color" required aria-describedby="">
+    </div>
+    <div class="form-text">This color will be used on marker map and other.</div>
+    <br>
+    <button class="btn btn-primary" type="submit">Save event type</button>
+</form>
+
+<br>
+
+<table class="table table-responsive table-striped table-hover table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Color</th>
+        <th scope="col">Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+        <% for (var i = 0;  i < eventTypes.length; i++) { %>
+            <tr>
+                <td>
+                    <%= eventTypes[i].id %>
+                </td>
+                <td>
+                    <%= eventTypes[i].name %>
+                </td>
+                <td>
+                    <%= eventTypes[i].description %>
+                </td>
+                <td>
+                    <div class="p-3" style="background-color: <%= eventTypes[i].color %>"></div>
+                </td>
+                <td>
+                    <button class="btn btn-default" data-href="/events/delete_type/<%= eventTypes[i].id%>" data-bs-toggle="modal" data-bs-target="#confirm-delete">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>

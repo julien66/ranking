@@ -1,0 +1,59 @@
+<form action="/events<% if (locals.edit) {%>/<%-edit.id%><%}%>" method="post" enctype="multipart/form-data">
+    <div class="input-group mb-3">
+        <span class="input-group-text">Name</span>
+        <input type="text" class="form-control" name="name" required aria-describedby="" value="<%if (locals.edit){%><%-edit.name%><%}%>">
+    </div>
+    <br>
+
+    <div class="input-group mb-3">
+        <span class="input-group-text">Type</span>
+        <select class="form-select" required aria-label="event type" name="eventTypeId">
+            <% for (var i = 0; i < eventTypes.length; i++) { %>
+                <option value="<%= eventTypes[i].id %>" <%if (locals.edit && (edit.id == eventTypes[i].id)) {%>selected<%}%>>
+                    <%= eventTypes[i].name %>
+                </option>
+            <% } %>
+        </select>
+    </div>
+    <div class="form-text">If you feel you miss a type of event, you can just add it <a href="/events/type">here</a></div>
+    <br>
+    <div class="input-group mb-3">
+        <span class="input-group-text">Rank Country</span>
+        <select class="form-select" required aria-label="event type" name="country">
+            <% Object.keys(countries).forEach(function(key) { %>
+                <option value="<%= key %>"<%if (locals.edit && (key == edit.country)){%>selected<%}%>><%= key %></option>
+            <% }); %>
+        </select>
+    </div>
+
+    <div class="input-group mb-3">
+        <span class="input-group-text">Rank Season</span>
+        <input type="number" aria-label="Ranking season" class="form-control" required name="season"
+               value="<%if (locals.edit) {%><%= edit.season %><%}else{%><%=thisYear%><%}%>" min="<%= thisYear - 10 %>" max="<%= thisYear + 2 %>">
+    </div>
+
+    <div class="input-group mb-3">
+        <span class="input-group-text">Start and end dates</span>
+        <input type="date" aria-label="event start" class="form-control" required name="start" value="<%if (locals.edit) { %><%- new Date(edit.start).toISOString().substring(0,10)%><%}%>">
+        <input type="date" aria-label="event end" class="form-control" required name="end" value="<%if (locals.edit) {%><%- new Date(edit.end).toISOString().substring(0,10)%><%}%>">
+    </div>
+
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="website">Website</label>
+        <input type="url" class="form-control" name="website" value="<% if (locals.edit) {%><%-edit.website%><%}%>">
+    </div>
+
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="latlon">Location</label>
+        <input id="geoloc" type="text" class="form-control" name="latlon" value="<% if (locals.edit && edit.latlon) { %><%- edit.latlon.coordinates[1]+','+edit.latlon.coordinates[0]%><%}%>">
+    </div>
+    <div id="mapContainer"></div>
+    <br>
+
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="ranking">Ranking</label>
+        <input type="file" class="form-control" name="ranking">
+    </div>
+
+    <button class="btn btn-primary" type="submit">Save event</button>
+</form>

@@ -1,0 +1,37 @@
+.borderBold td {
+    border-top: 4px solid #CCC;
+    vertical-align: middle;
+}
+
+.dayHead {
+    font-size: 0.7em;
+}
+
+#tableCalendar {
+    text-align:center
+}
+
+td.busyFirst {
+    border-left : 1px solid #EEE;
+}
+
+td.busy {
+    border :none;
+    border-top : 1px solid #EEE;
+    border-bottom : 1px solid #EEE;
+    white-space : nowrap;
+    font-weight : bold;
+    font-size : 0.9em ;
+}
+
+td.busyLast {
+    border-right : 1px solid #EEE;
+}
+
+td.invalidDay {
+    background-color : #EEE;
+}
+
+tr.hasEvents, tr.hasEvents td {
+    height : 25px
+}

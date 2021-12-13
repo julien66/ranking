@@ -1,0 +1,182 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="/stylesheets/calendar.css"></script>
+<script>
+    $(document).ready(function() {
+
+        // Prepare calendar structure.
+        var invalidDays = [];
+
+        // Format Month name.
+        $('.month').each(function(index) {
+            $(this).html(
+                moment().month($(this).attr('month')).format("MMM")
+            );
+        });
+
+        // Format day name
+        $('.dayHead').each(function(index) {
+            var date = moment($(this).attr('date'));
+            if (date.isValid()) {
+                $(this).html(date.format("ddd"));
+            }
+            else {
+                invalidDays.push({month : $(this).parent('tr').attr('month'), day : $(this).attr('day')})
+                //$(this).css({'border' : 'none', 'background-color' : "#CCC" })
+            }
+        });
+
+        var setInvalidDays = function() {
+            for (var i = 0; i < invalidDays.length; i++) {
+                $("tr[month = '" + invalidDays[i].month + "']" + " td[day='" + invalidDays[i].day + "']").addClass('invalidDay');
+            }
+        };
+        setInvalidDays();
+
+        // This will store the current nomber of row currently available for the month.
+        let monthRow = [];
+        for (let i = 1; i < 13; i++) {
+            monthRow.push(1);
+        }
+
+        // return block format to know where to add the event on the row
+        // Will return many block if event is accross multiple month.
+        // A "block" is an usefull abstraction for drawing correctly the event on the calendar.
+        // [{event : event, month : 1, days: [29,30,31]}, {event : event, month : 2, days:[1,2,3]}];
+        let formatBlock = function(event) {
+            let blocks = [];
+            var currentMonth = 0;
+            a = event.start;
+            b = event.end;
+            for (var m = moment(a); m.isBefore(b); m.add(1, 'days')) {
+                let month = parseInt(m.format('MM'));
+                if (month !== currentMonth) {
+                    currentMonth = month;
+                    blocks.push({event : event, month : month, days: []})
+                }
+                blocks[blocks.length-1]['days'].push(parseInt(m.format('DD')));
+            }
+            checkAvailability(blocks, 1);
+        };
+
+        // Helper function to build a full row month of <td></td> for each days.
+        let buildRowDays = function() {
+            let rowDays = '';
+            for (var i = 1; i < 32; i++) {
+                rowDays += "<td day=" + i + "></td>";
+            }
+            return rowDays;
+        }
+
+        // We detected a blocks that coincided with a busy row...
+        // Let's deal with it.
+        let busyBlocks = function(blocks, row) {
+            for (var i = 0; i < blocks.length; i++ ) {
+                let month = blocks[i].month;
+                if (row === monthRow[month]) {
+                    monthRow[month] += 1;
+                    addRow(month, row);
+                }
+            }
+            // Ok, this row was busy for thoses blocks but now if we have added a new row in case of need.
+            // Let's go back to check availability in the next row now.
+            checkAvailability(blocks, row + 1);
+        }
+
+        // This will add a new row to a specific month
+        let addRow = function(month, row) {
+            $("tr[month='" + month + "'][row='" + row + "']").after(
+                "<tr class='hasEvents' row='" + (row + 1) + "' month='" + month + "'>" + buildRowDays() + "</tr>"
+            );
+            $("td[month='" + (month - 1) + "']").attr('rowspan', monthRow[month] + 1);
+            setInvalidDays();
+        };
+
+
+        // Check if given blocks can be added on actual calendar row.
+        // If It's ok just put the cells in memory so we can draw them.
+        // If it collide with others blocks we need to work more. See busyBlocks.
+        let checkAvailability = function(blocks, row) {
+            var cellGroups = []
+            // For every block.
+            for (let i = 0; i < blocks.length; i++) {
+                // Check every days availability.
+                let block = blocks[i];
+                let available = testDays(block, row);
+                // If already occupied here.
+                if (available === false) {
+                    busyBlocks(blocks, row);
+                    return;
+                }
+                cellGroups.push(available);
+            }
+            for (var i = 0; i < cellGroups.length; i++) {
+                drawCells(cellGroups[i]);
+            }
+        };
+
+        // Helper function to test each single days of a block against a specific row.
+        // Return false if there is a collision, a cell group ready to be drawn otherwise.
+        let testDays = function(block, row) {
+            var cellGroup = [];
+            for (let y = 0; y < block.days.length; y++) {
+                var cell = $("tr[row='" + row + "'][month='" + block.month + "'] td[day='" + block.days[y] + "']");
+                if (cell.hasClass('busy') == true) {
+                    return false;
+                }
+                cellGroup.push({cell : cell, event : block.event});
+            }
+            return cellGroup;
+        }
+
+        // Now we're just drawing and adding the 'busy' class.
+        let drawCells = function(cellGroup) {
+            for (let i = 0; i < cellGroup.length; i++) {
+                if (i === 0) {
+                    cellGroup[i].cell.addClass('busyFirst');
+                }
+                cellGroup[i].cell.addClass('busy').css({'background-color' : cellGroup[i].event['eventType.color']});
+                if (i === cellGroup.length - 1) {
+                    cellGroup[i].cell.addClass('busyLast');
+                }
+            }
+        }
+
+        var events = <%- JSON.stringify(events) %>
+        for (let i = 0; i < events.length; i++) {
+            formatBlock(events[i]);
+        }
+    });
+</script>
+<table id="tableCalendar" class="table table-bordered">
+    <thead>
+        <td></td>
+        <% for (var i = 1; i < 32; i++) { %>
+            <th><%=i%></th>
+        <% } %>
+    </thead>
+    <tbody>
+        <% for (var i = 1; i < 13; i++) { %>
+            <tr class="borderBold" month="<%= i %>">
+                <% for (var r = 1; r < 33; r++ ) { %>
+                    <td <% if (r == 1) { %> rowspan="2" class="month" month="<%= i - 1 %>" <% } else { %> class="dayHead" day="<%= (r-1) %>" date="2022-<%= ("0" + i).slice(-2) %>-<%= ("0" + (r - 1)).slice(-2) %>" <% } %>>
+                    </td>
+                <% } %>
+            </tr>
+            <% for (var y = 0; y < 1; y++ ) { %>
+                <tr class="hasEvents" row="<%= y +1 %>" month="<%= i %>">
+                    <% for (var z = 1; z < 33; z++ ) { %>
+                        <% if (z > 1) { %>
+                            <td day="<%= (z - 1) %>"></td>
+                        <% } %>
+                    <% } %>
+                </tr>
+            <% } %>
+        <% } %>
+    </tbody>
+    <tfoot>
+        <td></td>
+        <% for (var i = 1; i < 32; i++) { %>
+            <th><%=i%></th>
+        <% } %>
+    </tfoot>
+</table>
