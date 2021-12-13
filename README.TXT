@@ -32,4 +32,4 @@ Nodejs, Express, MYSQL, sequelize, leaflet, bootstrap.
 - Map is displyaing created events. (need a related timeline below).
 - Time to store athletes and their results.
 
-Non profit. Help needed.
+Non profit. Licence GPL. Help needed.
