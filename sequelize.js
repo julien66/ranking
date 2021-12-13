@@ -19,7 +19,7 @@ Event.belongsTo(Result);
 //Athlete.hasMany(Result);
 
 sequelize
-    .sync({alter : true})
+    .sync()
     .then(() => {
         console.log('Mysql is ready. Sequelize sync' . green);
     })
