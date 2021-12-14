@@ -54,6 +54,7 @@
         <label class="input-group-text" for="ranking">Ranking</label>
         <input type="file" class="form-control <%- fieldError("ranking", errors) %>" name="ranking">
     </div>
+    <div class="text-danger"><%- errorDescription("ranking", errors) %></div>
 
     <button class="btn btn-primary" type="submit">Save event</button>
 </form>

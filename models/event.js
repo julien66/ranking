@@ -49,6 +49,7 @@ module.exports = (sequelize, type) => {
         },
         website : {
             type : type.STRING,
+            validate : {isUrl : true},
         },
     });
 };

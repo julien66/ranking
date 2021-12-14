@@ -1,0 +1,54 @@
+<table class="table table-responsive table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">id</th>
+        <th scope="col">Country</th>
+        <th scope="col">Name</th>
+        <th scope="col">Type</th>
+        <th scope="col">Start</th>
+        <th scope="col">End</th>
+        <th scope="col">Website</th>
+        <th scope="col">Delete</th>
+        <th scope="col">Edit</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <%= event.id %>
+        </td>
+        <td>
+        <span class="fp fp-md <%= event.flag.toLowerCase() %>" alt="<%= event.country %>">
+        </span>
+        </td>
+        <td>
+            <%= event.name %>
+        </td>
+        <td>
+            <%= event['eventType.name'] %>
+        </td>
+        <td>
+            <%= event.start.toLocaleDateString() %>
+        </td>
+        <td>
+            <%= event.end.toLocaleDateString() %>
+        </td>
+        <td>
+            <a href="<%= event.website %>"><%= event.website %></a>
+        </td>
+        <td>
+            <button class="btn btn-default" data-href="/events/delete/<%= event.id %>" data-bs-toggle="modal"
+                    data-bs-target="#confirm-delete">
+                <i class="fa fa-trash"></i>
+            </button>
+        </td>
+        <td>
+            <button class="btn btn-default">
+                <a href="/events/edit/<%= event.id %>">
+                    <i class="fa fa-edit"></i>
+                </a>
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>

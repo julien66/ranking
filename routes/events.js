@@ -65,8 +65,6 @@ var formatGeo = function(latlon) {
 
 // Post event page. Both create and edit event.
 router.post(['/', '/:id'], multer().any(), function(req, res, next) {
-    //console.log(req.files);
-
     if (req.body.latlon) {
         req.body.latlon = formatGeo(req.body.latlon);
     }
@@ -77,9 +75,8 @@ router.post(['/', '/:id'], multer().any(), function(req, res, next) {
     if (parseInt(req.params.id)) {
         Event.update(req.body, {where : {id : parseInt(req.params.id)}})
             .then(event => {
-                console.log(result);
                 if (!result.empty && result.errors.length == 0) {
-
+                    res.redirect('/events/' + req.params.id);
                 } else {
                     next(result.notifyError());
                 }
@@ -92,9 +89,17 @@ router.post(['/', '/:id'], multer().any(), function(req, res, next) {
         Event.create(req.body, {include: EventType})
             .then(event => res.redirect('/events'))
             .catch(function (err) {
-                console.log(err);
             });
     }
+});
+
+router.get('/:id', function(req, res) {
+   Event.findOne({raw: true, 'where' : {id : req.params.id}})
+       .then(event => {
+           res.render('eventPage', {title : 'Event Page', page : 'event', event : event})
+       })
+        .catch(function(err) {
+    })
 });
 
 router.get('/map', function(req, res) {

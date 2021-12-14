@@ -76,4 +76,17 @@ app.locals.fieldError = function(field, errors) {
   return (errors.field == field) ? 'is-invalid' : 'is-valid';
 }
 
+app.locals.errorDescription = function(field, errors) {
+  if (errors.field == field) {
+    var description = "<ul>";
+    for (var i = 0; i < errors['messages'].length; i++) {
+        description = description + "<li>" + errors['messages'][i] + "</li>";
+    }
+    description = description + "</ul>";
+    return description;
+  } else {
+    return '';
+  }
+}
+
 module.exports = app;
