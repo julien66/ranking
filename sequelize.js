@@ -28,10 +28,10 @@ Event.belongsTo(Result);
 sequelize
     .sync()
     .then(() => {
-        console.log('Mysql is ready. Sequelize sync' . green);
+        console.log('Database is ready. Sequelize sync' . green);
     })
     .catch(err => {
-        console.error('Mysql has a problem. Sequelize failed' . red, err);
+        console.error('Database has a problem. Sequelize failed' . red, err);
     });
 
 module.exports = {
