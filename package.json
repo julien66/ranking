@@ -14,6 +14,8 @@
     "ejs": "^2.6.2",
     "express": "^4.16.4",
     "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.17.2",
+    "express-session-sequelize": "^2.3.0",
     "flagpack": "^1.0.5",
     "http-errors": "~1.6.3",
     "leaflet-locationpicker": "^0.3.3",

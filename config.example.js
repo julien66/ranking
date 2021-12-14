@@ -8,9 +8,14 @@ var mysql = {
     user : 'MY_USER', // 'me'
 };
 
+var session = {
+    secret : "MY_SECRET_PASS"  //  'regular stupid session pass'
+}
+
 /* DO NOT TOUCH BELOW THIS LINE IF YOU DO NOT KNOW */
 var build = function (mysql) {
     return 'mysql://' + mysql.user + ':' + mysql.password +'@' + mysql.host + ':' + mysql.port + '/' + mysql.database;
 }
 
 exports.mysql = build;
+exports.sessionSecret = session.secret;

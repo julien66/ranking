@@ -24,7 +24,7 @@
 
 <div class="collapse <%if (locals.edit) {%>show<%}%>" id="addForm">
     <div class="card card-body">
-        <%-include('forms/eventForm', {eventTypes : eventTypes, countries : countries, thisYear : thisYear, edit : edit}) %>
+        <%-include('forms/eventForm', {eventTypes : eventTypes, countries : countries, thisYear : thisYear, edit : edit, errors : errors}) %>
     </div>
 </div>
 <br>

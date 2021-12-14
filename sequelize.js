@@ -1,7 +1,14 @@
 const colors = require('colors');
 const conf = require('./config');
 const Sequelize = require('sequelize');
+
 const sequelize = new Sequelize(conf.mysql);
+const expressSession = require('express-session');
+const SessionStore = require('express-session-sequelize')(expressSession.Store);
+
+const sequelizeSessionStore = new SessionStore({
+    db: sequelize,
+});
 
 const eventTypeModel = require('./models/eventType');
 const eventModel = require('./models/event');
@@ -28,6 +35,7 @@ sequelize
     });
 
 module.exports = {
+    sequelizeSessionStore,
     Event,
     EventType,
 }

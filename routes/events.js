@@ -1,7 +1,7 @@
 var express = require('express');
 var multer = require('multer');
-var xlsx = require('node-xlsx');
 var router = express.Router();
+const {ProcessResults} = require('./../results/processResults');
 const { getNameList, getCode } = require('country-list');
 
 const { Event, EventType } = require('./../sequelize');
@@ -32,9 +32,10 @@ router.post('/type', function(req, res, next) {
         .then(user => res.redirect('/events/type'));
 });
 
-/* GET POST add event page. */
+/* GET event page. Add and Edit */
 router.get(['/', '/edit/:id'], function(req, res, next) {
     let countries = getNameList();
+    let errors = (req.session.errors) ? req.session.errors : false;
     let promises = [
         EventType.findAll({raw : true, attributes: ['id', 'name']}),
         Event.findAll({raw : true, attributes: ['id', 'country', 'flag', 'name', 'start', 'end', 'website'], include: [{model : EventType, attributes: ['name']}]}),
@@ -52,6 +53,7 @@ router.get(['/', '/edit/:id'], function(req, res, next) {
                     countries : countries,
                     thisYear : new Date().getFullYear(),
                     edit : edit,
+                    errors : errors,
                 });
             });
 });
@@ -61,43 +63,38 @@ var formatGeo = function(latlon) {
     return {'type' : 'Point','coordinates' : [latlon.split(',')[1], latlon.split(',')[0]]};
 };
 
+// Post event page. Both create and edit event.
 router.post(['/', '/:id'], multer().any(), function(req, res, next) {
     //console.log(req.files);
 
-    // @todo. Check data and insert event first. You'll get Event ID.
-    // You can just treat the comp then.
     if (req.body.latlon) {
         req.body.latlon = formatGeo(req.body.latlon);
     }
     // Add flag. Get code from Name
     req.body.flag = getCode(req.body.country);
+    var result = new ProcessResults(req ,res);
 
-    // Update or create
     if (parseInt(req.params.id)) {
         Event.update(req.body, {where : {id : parseInt(req.params.id)}})
-            .then(event => res.redirect('/events'))
+            .then(event => {
+                console.log(result);
+                if (!result.empty && result.errors.length == 0) {
+
+                } else {
+                    next(result.notifyError());
+                }
+                res.redirect('/events');
+            })
             .catch(function(err) {
-            console.log(err);
         });
     }  else {
+        // Create the comp first. We'll deal with results later.
         Event.create(req.body, {include: EventType})
             .then(event => res.redirect('/events'))
             .catch(function (err) {
                 console.log(err);
             });
     }
-
-    /*if (req.files.length > 0) {
-        var doc = xlsx.parse(req.files[0].buffer);
-        if (doc.length > 0 && doc[0].data.length > 0) {
-            var header = doc[0].data[0];
-            console.log(header)
-            var data = doc[0].data.slice(1);
-            for (var i = 0;  i < data.length; i++) {
-                console.log(data[i]);
-            }
-        }
-    }*/
 });
 
 router.get('/map', function(req, res) {

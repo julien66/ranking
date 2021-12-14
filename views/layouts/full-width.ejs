@@ -23,10 +23,10 @@
           </a>
 
           <ul class="nav nav-pills">
-            <li class="nav-item"><a href="/" class="nav-link <% if (locals.page && page == 'home') { %> active <% } %>" aria-current="page">Home</a></li>
-              <li class="nav-item"><a href="/events" class="nav-link <% if (locals.page && page == 'events') { %> active <% } %>" aria-current="page">Events</a></li>
-              <li class="nav-item"><a href="/events/calendar" class="nav-link<%if (locals.page && page == 'calendar') { %> active <% } %>" aria-current="page">Calendar</a></li>
-              <li class="nav-item"><a href="/events/map" class="nav-link<%if (locals.page && page == 'map') { %> active <% } %>" aria-current="page">Map</a></li>
+            <li class="nav-item"><a href="/" class="nav-link <%- activeLink(locals.page, 'home') %>" aria-current="page">Home</a></li>
+              <li class="nav-item"><a href="/events" class="nav-link <%- activeLink(locals.page, 'events') %>" aria-current="page">Events</a></li>
+              <li class="nav-item"><a href="/events/calendar" class="nav-link<%- activeLink(locals.page, 'calendar') %>" aria-current="page">Calendar</a></li>
+              <li class="nav-item"><a href="/events/map" class="nav-link<%- activeLink(locals.page, 'map') %>" aria-current="page">Map</a></li>
             <li class="nav-item"><a href="#" class="nav-link">About</a></li>
           </ul>
         </header>
