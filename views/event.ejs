@@ -71,17 +71,15 @@
                 <a href="<%= events[i].website %>"><%= events[i].website %></a>
             </td>
             <td>
-                <button class="btn btn-default" data-href="/events/delete/<%= events[i].id %>" data-bs-toggle="modal"
+                <button class="btn btn-danger" data-href="/events/delete/<%= events[i].id %>" data-bs-toggle="modal"
                         data-bs-target="#confirm-delete">
                     <i class="fa fa-trash"></i>
                 </button>
             </td>
             <td>
-                <button class="btn btn-default">
-                    <a href="/events/edit/<%= events[i].id %>">
-                        <i class="fa fa-edit"></i>
-                    </a>
-                </button>
+                <a class="btn btn-primary" href="/events/edit/<%= events[i].id %>">
+                    <i class="fa fa-edit"></i>
+                </a>
             </td>
         </tr>
     <% } %>

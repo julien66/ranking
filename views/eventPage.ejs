@@ -20,8 +20,7 @@
             <%= event.id %>
         </td>
         <td>
-        <span class="fp fp-md <%= event.flag.toLowerCase() %>" alt="<%= event.country %>">
-        </span>
+            <span class="fp fp-md <%= event.flag.toLowerCase() %>" alt="<%= event.country %>"></span>
         </td>
         <td>
             <%= event.name %>
@@ -39,35 +38,42 @@
             <a href="<%= event.website %>"><%= event.website %></a>
         </td>
         <td>
-            <button class="btn btn-default" data-href="/events/delete/<%= event.id %>" data-bs-toggle="modal"
+            <button class="btn btn-danger" data-href="/events/delete/<%= event.id %>" data-bs-toggle="modal"
                     data-bs-target="#confirm-delete">
                 <i class="fa fa-trash"></i>
             </button>
         </td>
         <td>
-            <button class="btn btn-default">
-                <a href="/events/edit/<%= event.id %>">
-                    <i class="fa fa-edit"></i>
-                </a>
-            </button>
+            <a type="button" class="btn btn-primary" href="/events/edit/<%= event.id %>">
+                <i class="fa fa-edit"></i>
+            </a>
         </td>
     </tr>
     </tbody>
 </table>
 
-<table class="table table-responsive table-bordered">
-<thead>
-</thead>
-    <tbody>
 <% if (uploadResults) {%>
-    <% for (var i = 0; i < uploadResults.length; i++) {%>
-        <tr>
+    <div class="alert alert-warning" role="alert">
+        <b>Here are the results we extracted from your file. Are they correct ?</b>
+        <a type="button" class="btn btn-warning" href="/events/edit/<%- event.id%>">
+            <i class="fa fa-times"></i> No. Back to upload
+        </a>
 
-        <% for (var y = 0; y < uploadResults[i].length; y++) {%>
-            <td><%-uploadResults[i][y]%></td>
-            <% } %>
-        </tr>
-    <%}%>
+        <a type="button" class="btn btn-success" href="/results/<%- event.id%>">
+            <i class="fa fa-check"></i> Save results !
+        </a>
+    </div>
+    <table class="table table-responsive table-bordered">
+        <thead>
+        </thead>
+        <tbody>
+        <% for (var i = 0; i < uploadResults.length; i++) {%>
+            <tr>
+                <% for (var y = 0; y < uploadResults[i].length; y++) {%>
+                    <td><%-uploadResults[i][y]%></td>
+                <% } %>
+            </tr>
+        <%}%>
+        </tbody>
+    </table>
 <%}%>
-    </tbody>
-</table>
