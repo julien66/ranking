@@ -35,7 +35,11 @@ router.post('/type', function(req, res, next) {
 /* GET event page. Add and Edit */
 router.get(['/', '/edit/:id'], function(req, res, next) {
     let countries = getNameList();
-    let errors = (req.session.errors) ? req.session.errors : false;
+    let errors = false;
+    if (req.session.errors) {
+        errors = req.session.errors;
+        delete req.session.errors;
+    }
     let promises = [
         EventType.findAll({raw : true, attributes: ['id', 'name']}),
         Event.findAll({raw : true, attributes: ['id', 'country', 'flag', 'name', 'start', 'end', 'website'], include: [{model : EventType, attributes: ['name']}]}),
@@ -60,7 +64,16 @@ router.get(['/', '/edit/:id'], function(req, res, next) {
 
 // Helper function to format geoJson from latlon string. '{lat} , {lon}';
 var formatGeo = function(latlon) {
-    return {'type' : 'Point','coordinates' : [latlon.split(',')[1], latlon.split(',')[0]]};
+    return {
+        'type' : 'Point',
+        'coordinates' : [latlon.split(',')[1], latlon.split(',')[0]],
+        'crs': {
+            'type': "name",
+            'properties': {
+                'name': "urn:ogc:def:crs:EPSG::4326"
+            }
+        }
+    };
 };
 
 // Post event page. Both create and edit event.
@@ -90,13 +103,18 @@ router.post(['/', '/:id'], multer().any(), function(req, res, next) {
         Event.create(req.body, {include: EventType})
             .then(event => res.redirect('/events'))
             .catch(function (err) {
+                console.log(err);
             });
     }
 });
 
 router.get('/page/:id', function(req, res) {
-    let uploadResults = (req.session.results) ? req.session.results : false;
-   Event.findOne({raw: true, 'where' : {id : req.params.id}})
+    let uploadResults = false;
+    if (req.session.results) {
+        uploadResults = req.session.results;
+        delete req.session.results;
+    }
+    Event.findOne({raw: true, 'where' : {id : req.params.id}})
        .then(event => {
            res.render('eventPage', {title : 'Event Page', page : 'event', event : event, uploadResults : uploadResults})
        })
