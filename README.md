@@ -10,10 +10,10 @@ This is a nodejs application, build on top of Express.
 - Clone this repo.
 - Install expressJS and all project dependencies (package.json)
 
-## Database MYSQL.
-This project is heavily relational and we choosed to rely on MYSQL.
-- Install MSYQL.
-- Create an empty Database on MYSQL.
+## Database MYSQL or POSTGRESQL - SEQUELIZE.
+This project is heavily relational and we choosed to rely on sequelize.
+- Install MSYQL or POSTGRES with POSTGIS extension.
+- Create an empty Database.
 - Duplicate config.example.json into config.js and set the connection parameters to your database properly.
 - The rest (table creation, indexes...) is done alone via sequelize.
 
