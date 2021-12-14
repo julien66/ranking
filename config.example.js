@@ -1,7 +1,7 @@
 /* This file is a sample mysql connection that you need to reanme config.js and adapt. */
 
 var dbconf = {
-    system : 'postgres' // posgres mysql... others compatible with sequelize
+    system : 'postgres', // posgres mysql... others compatible with sequelize
     database : 'MY_DATABASE', // 'HIKEFLY'
     host : 'MY_HOST', // 'localhost'
     password : 'MY_PASS', // 'I won't tell'
