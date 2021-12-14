@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="/flagpack/flagpack.css"/>
+
 <table class="table table-responsive table-bordered">
     <thead>
     <tr>
@@ -50,5 +52,22 @@
             </button>
         </td>
     </tr>
+    </tbody>
+</table>
+
+<table class="table table-responsive table-bordered">
+<thead>
+</thead>
+    <tbody>
+<% if (uploadResults) {%>
+    <% for (var i = 0; i < uploadResults.length; i++) {%>
+        <tr>
+
+        <% for (var y = 0; y < uploadResults[i].length; y++) {%>
+            <td><%-uploadResults[i][y]%></td>
+            <% } %>
+        </tr>
+    <%}%>
+<%}%>
     </tbody>
 </table>

@@ -28,6 +28,14 @@ class ProcessResults {
         }
     }
 
+    get getResults() {
+        return this.getResults();
+    }
+
+    getResults() {
+        return this.results;
+    }
+
     get notifyError() {
         return this.notifyError();
     }

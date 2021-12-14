@@ -54,7 +54,9 @@
                 </span>
             </td>
             <td>
-                <%= events[i].name %>
+                <a href="/events/page/<%- events[i].id%>">
+                    <%= events[i].name %>
+                </a>
             </td>
             <td>
                 <%= events[i]['eventType.name'] %>

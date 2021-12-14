@@ -68,7 +68,7 @@ app.use(function(err, req, res, next) {
 
 app.locals.activeLink = function(page, pageName) {
   if (page && (page === pageName)) {
-    return 'active';
+    return ' active';
   }
 }
 

@@ -76,7 +76,8 @@ router.post(['/', '/:id'], multer().any(), function(req, res, next) {
         Event.update(req.body, {where : {id : parseInt(req.params.id)}})
             .then(event => {
                 if (!result.empty && result.errors.length == 0) {
-                    res.redirect('/events/' + req.params.id);
+                    req.session.results = result.getResults();
+                    res.redirect('/events/page/' + req.params.id);
                 } else {
                     next(result.notifyError());
                 }
@@ -93,10 +94,11 @@ router.post(['/', '/:id'], multer().any(), function(req, res, next) {
     }
 });
 
-router.get('/:id', function(req, res) {
+router.get('/page/:id', function(req, res) {
+    let uploadResults = (req.session.results) ? req.session.results : false;
    Event.findOne({raw: true, 'where' : {id : req.params.id}})
        .then(event => {
-           res.render('eventPage', {title : 'Event Page', page : 'event', event : event})
+           res.render('eventPage', {title : 'Event Page', page : 'event', event : event, uploadResults : uploadResults})
        })
         .catch(function(err) {
     })

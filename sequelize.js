@@ -2,7 +2,7 @@ const colors = require('colors');
 const conf = require('./config');
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize(conf.mysql);
+const sequelize = new Sequelize(conf.db);
 const expressSession = require('express-session');
 const SessionStore = require('express-session-sequelize')(expressSession.Store);
 
