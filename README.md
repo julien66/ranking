@@ -7,8 +7,8 @@ We aknowledge this project is focused on ranking Hike and Fly Pilots but would l
 ## Installation Guide.
 This is a nodejs application, build on top of Express.
 - Install nodejs.
-- Clone this repo.
-- Install expressJS and all project dependencies (package.json)
+- Clone this repo. - git clone
+- Install expressJS and all project dependencies (package.json) - npm install
 
 ## Database MYSQL or POSTGRESQL - SEQUELIZE.
 This project is heavily relational and we choosed to rely on sequelize.
@@ -18,7 +18,7 @@ This project is heavily relational and we choosed to rely on sequelize.
 - The rest (table creation, indexes...) is done alone via sequelize.
 
 ## Choosed Stack.
-Nodejs, Express, MYSQL, sequelize, leaflet, bootstrap.
+Nodejs, Express, MYSQL or POSTGRESQL, sequelize, leaflet, bootstrap.
 
 ###  V1. minimal requirements.
 - Events pages basic informations along with results upload.

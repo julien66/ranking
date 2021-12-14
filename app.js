@@ -73,6 +73,9 @@ app.locals.activeLink = function(page, pageName) {
 }
 
 app.locals.fieldError = function(field, errors) {
+  if (!errors) {
+    return '';
+  }
   return (errors.field == field) ? 'is-invalid' : 'is-valid';
 }
 
