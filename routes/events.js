@@ -95,7 +95,7 @@ router.post(['/', '/:id'], multer().any(), function(req, res, next) {
                         .then(del => {
                             FileResult.create(result.toDb(), {include : Event})
                                 .then(file => {
-                                    res.redirect('/events/page/' + req.params.id)
+                                    res.redirect('/events/page/' + req.params.id + '/check');
                                 })
                                 .catch(function(err){
                                     console.log(err);
@@ -121,7 +121,7 @@ router.post(['/', '/:id'], multer().any(), function(req, res, next) {
                 if (!result.empty && result.errors.length == 0) {
                     FileResult.create(result.toDb(), {include : Event})
                         .then(file => {
-                            res.redirect('/events/page/' + req.params.id)
+                            res.redirect('/events/page/' + req.params.id + '/check');
                         })
                         .catch(function(err){
                             console.log("Creating new file result failed");
@@ -136,15 +136,18 @@ router.post(['/', '/:id'], multer().any(), function(req, res, next) {
     }
 });
 
-router.get('/page/:id', function(req, res) {
-    let uploadResults = false;
-    if (req.session.results) {
-        uploadResults = req.session.results;
-        delete req.session.results;
-    }
-    Event.findOne({raw: true, 'where' : {id : req.params.id}})
+router.get(['/page/:id', '/page/:id/check'], function(req, res) {
+    Event.findOne({raw: true, 'where' : {id : req.params.id}, include : {model : FileResult}})
        .then(event => {
-           res.render('eventPage', {title : 'Event Page', page : 'event', event : event, uploadResults : uploadResults})
+           let uploadResults = false;
+           uploadResults = new ProcessResults(req, {
+               originalname : event['fileResult.originalname'],
+               mimetype : event['fileResult.mimetype'],
+               size : event['fileResult.size'],
+               buffer : event['fileResult.buffer'],
+               eventId : event['fileResult.eventId']
+           });
+           res.render('eventPage', {title : 'Event Page', page : 'event', event : event, uploadResults : uploadResults.results})
        })
         .catch(function(err) {
     })

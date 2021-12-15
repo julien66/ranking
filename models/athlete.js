@@ -48,6 +48,10 @@ module.exports = (sequelize, type) => {
         },
         civlId : {
             type: type.STRING,
-        }
+        },
+        code : {
+            type : type.STRING,
+            primaryKey: true,
+        },
     });
 };

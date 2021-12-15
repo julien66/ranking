@@ -21,6 +21,7 @@ const Event = eventModel(sequelize, Sequelize);
 const Result = resultModel(sequelize, Sequelize);
 const FileResult = fileResultModel(sequelize, Sequelize);
 const Athlete = athleteModel(sequelize, Sequelize);
+
 EventType.hasOne(Event);
 Event.belongsTo(EventType);
 Result.hasOne(Event);
@@ -43,4 +44,5 @@ module.exports = {
     Event,
     EventType,
     FileResult,
+    Athlete,
 }

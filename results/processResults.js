@@ -3,30 +3,37 @@ var xlsx = require('node-xlsx');
 
 class ProcessResults {
 
-    constructor(req, res) {
+    // This class can either be instanciated directly from file request req.files
+    // or by passing an event model object including fileResults.
+    constructor(req, file) {
         this.expectedColumns = ['rank', 'lastname', 'firstname', 'gender', 'pilotcode', 'country', 'licencen'];
         this.errors = [];
         this.warnings = [];
+        this.header = [];
+        this.results = [];
         this.landPageError = (req.params.id) ? '/events/edit/' + req.params.id : '/events';
+        this.empty = true;
 
-        if (req.files.length < 1) {
-            this.empty = true;
+        if (!req.files || req.files.length < 1) {
+            if (file) {
+                this.init(file);
+            }
         } else {
-            this.empty = false;
-
+            this.init(req.files[0]);
             this.eventId = req.params.id ? req.params.id : false;
-            this.file = req.files[0];
-            this.filename = this.file.originalname;
-            this.field = this.file.fieldname;
-            this.mime = this.file.mimetype;
-            this.buffer = this.file.buffer;
-            this.size = this.file.size;
-            this.header = [];
-            this.results = [];
-            this.getData();
-            this.checkHeader();
-            this.checkData();
         }
+    }
+
+    init(file) {
+        this.empty = false;
+        this.filename = file.originalname;
+        this.field = file.fieldname;
+        this.mime = file.mimetype;
+        this.buffer = file.buffer;
+        this.size = file.size;
+        this.getData();
+        this.checkHeader();
+        this.checkData();
     }
 
     get toDb() {

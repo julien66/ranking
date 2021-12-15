@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
 var logger = require('morgan');
 
+var athleteRouter = require('./routes/athletes');
 var indexRouter = require('./routes/index');
 var eventRouter = require('./routes/events');
 var usersRouter = require('./routes/users');
@@ -39,7 +40,7 @@ app.use('/flags', express.static(__dirname + '/node_modules/flagpack/flags/'));
 app.use('/', indexRouter);
 app.use('/events', eventRouter);
 app.use('/users', usersRouter);
-
+app.use('/athletes', athleteRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
