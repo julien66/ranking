@@ -14,6 +14,7 @@ class ProcessResults {
         } else {
             this.empty = false;
 
+            this.eventId = req.params.id ? req.params.id : false;
             this.file = req.files[0];
             this.filename = this.file.originalname;
             this.field = this.file.fieldname;
@@ -25,6 +26,29 @@ class ProcessResults {
             this.getData();
             this.checkHeader();
             this.checkData();
+        }
+    }
+
+    get toDb() {
+        return this.toDb();
+    }
+
+    set setEventId(id) {
+        return this.setEventid(id);
+    }
+
+    setEventid(id) {
+        this.landPageError = '/events/edit/' + id
+        this.eventId = id;
+    }
+
+    toDb() {
+        return {
+            originalname : this.filename,
+            mimetype : this.mime,
+            buffer : this.buffer,
+            size : this.size,
+            eventId : this.eventId,
         }
     }
 

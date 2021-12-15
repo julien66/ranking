@@ -4,7 +4,7 @@ var router = express.Router();
 const {ProcessResults} = require('./../results/processResults');
 const { getNameList, getCode } = require('country-list');
 
-const { Event, EventType } = require('./../sequelize');
+const { Event, EventType, FileResult } = require('./../sequelize');
 
 /* GET POST add type event */
 router.get('/type', function(req, res, next) {
@@ -45,7 +45,7 @@ router.get(['/', '/edit/:id'], function(req, res, next) {
         Event.findAll({raw : true, attributes: ['id', 'country', 'flag', 'name', 'start', 'end', 'website'], include: [{model : EventType, attributes: ['name']}]}),
     ];
     if (parseInt(req.params.id)) {
-        promises.push(Event.findOne({'where' : {id : parseInt(req.params.id)}}));
+        promises.push(Event.findOne({'where' : {id : parseInt(req.params.id)}, include : {model : FileResult}, 'raw' : true}));
     }
     Promise.all(promises).then(results => {
                 let edit = (results.length > 2) ? results[2] : null;
@@ -77,6 +77,8 @@ var formatGeo = function(latlon) {
 };
 
 // Post event page. Both create and edit event.
+// We always want to priorize event form OVER handling results file.
+// Other form field from event must not fail because file format or other is not good.
 router.post(['/', '/:id'], multer().any(), function(req, res, next) {
     if (req.body.latlon) {
         req.body.latlon = formatGeo(req.body.latlon);
@@ -89,21 +91,47 @@ router.post(['/', '/:id'], multer().any(), function(req, res, next) {
         Event.update(req.body, {where : {id : parseInt(req.params.id)}})
             .then(event => {
                 if (!result.empty && result.errors.length == 0) {
-                    req.session.results = result.getResults();
-                    res.redirect('/events/page/' + req.params.id);
+                    FileResult.destroy({where : {eventId : req.params.id}})
+                        .then(del => {
+                            FileResult.create(result.toDb(), {include : Event})
+                                .then(file => {
+                                    res.redirect('/events/page/' + req.params.id)
+                                })
+                                .catch(function(err){
+                                    console.log(err);
+                                    console.log("Creating new file result failed" .red);
+                                })
+                        })
+                        .catch(function(err) {
+                            console.log("Deleting file result failed" . red);
+                            res.redirect('/events/edit/' + req.params.id);
+                        });
+                    //req.session.results = result.getResults();
                 } else {
                     next(result.notifyError());
                 }
-                res.redirect('/events');
             })
             .catch(function(err) {
         });
     }  else {
         // Create the comp first. We'll deal with results later.
         Event.create(req.body, {include: EventType})
-            .then(event => res.redirect('/events'))
+            .then(event => {
+                result.setEventid(event.id);
+                if (!result.empty && result.errors.length == 0) {
+                    FileResult.create(result.toDb(), {include : Event})
+                        .then(file => {
+                            res.redirect('/events/page/' + req.params.id)
+                        })
+                        .catch(function(err){
+                            console.log("Creating new file result failed");
+                        });
+                } else {
+                    next(result.notifyError());
+                }
+            })
             .catch(function (err) {
-                console.log(err);
+                console.log("Event creation failed");
             });
     }
 });
