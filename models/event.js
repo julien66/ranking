@@ -51,5 +51,9 @@ module.exports = (sequelize, type) => {
             type : type.STRING,
             validate : {isUrl : true},
         },
+        rankStatus : {
+            type : type.BOOL,
+            defaultValue : false,
+        }
     });
 };

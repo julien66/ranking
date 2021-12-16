@@ -1,0 +1,67 @@
+<div class="alert alert-primary">
+    <i class="fa fa-table"></i>
+    <b>You can upload event results with a simple Excel or OpenOffice file.</b>
+    Just format your column according to this simple pattern, save and send.<br>
+</div>
+<div class="alert alert-warning">
+    <i class="fa fa-exclamation-triangle"></i>
+    Please note the column order, uppercase, lowercase, space does not matter.
+</div>
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Mandatory columns are the following :</h4>
+                <ul class="list-unstyled">
+                    <li><b>Rank : </b>The rank of the athlete at the end of the competition</li>
+                    <li><b>Last name : </b>Athlete last name</li>
+                    <li><b>First name : </b>Athlete first name</li>
+                    <li><b>Gender : </b>Athlete gender. M for Male. F for Female</li>
+                    <li><b>Country : </b>Pilot country formated as short ISO letters. eg. AT Austria. FR France</li>
+                    <li><b>Licence : </b>National licence number</li>
+                    <li><b>Pilot code : </b>Concatenation of a pilot country and licence. This is our pilot identification process.</li>
+                </ul>
+
+    </div>
+    <div class="card-footer">
+        <h5> Example : </h5>
+        <table class="table table-responsive table-bordered">
+            <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Gender</th>
+                <th>Country</th>
+                <th>Licence</th>
+                <th>Pilot Code</th>
+            </tr>
+            </thead>
+            <tr>
+                <td>1</td>
+                <td>Maurer</td>
+                <td>Christian</td>
+                <td>M</td>
+                <td>CH</td>
+                <td>20034*****</td>
+                <td>CH20034*****</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h4> We allow others columns as well :</h4>
+        <ul>
+            <li><b>CivlId : </b> Athlete identification form FAI can allow pilot identification as well</li>
+            <li><b>Birth : </b> Athlete birth date</li>
+            <li><b>Distance : </b> Performance result in kilometers</li>
+            <li><b>Time : </b>Performance result in time</li>
+            <li><b>Points : </b>Performance result in points</li>
+            <li><b>Status : </b>Performance status : 'Eliminated', 'Abandon'</li>
+            <li><b>Harness : </b>Harness used during the event</li>
+            <li><b>Glider : </b>Glider used during the event</li>
+            <li><b>Sponsor : </b>Sponsor used during the event</li>
+        </ul>
+        If you fell like some datas are missing just get in touch.
+    </div>
+</div>

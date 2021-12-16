@@ -23,15 +23,19 @@ class ProcessResults {
     }
 
     init(file) {
-        this.empty = false;
-        this.filename = file.originalname;
-        this.field = file.fieldname;
-        this.mime = file.mimetype;
-        this.buffer = file.buffer;
-        this.size = file.size;
-        this.getData();
-        this.checkHeader();
-        this.checkData();
+        if (file.originalname && file.buffer && file.mimetype && file.size) {
+            this.filename = file.originalname;
+            this.field = file.fieldname;
+            this.mime = file.mimetype;
+            this.buffer = file.buffer;
+            this.size = file.size;
+            this.getData();
+            this.checkHeader();
+            this.checkData();
+            if (this.errors.length == 0) {
+                this.empty = false;
+            }
+        }
     }
 
     get toDb() {

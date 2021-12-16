@@ -52,7 +52,7 @@
     </tbody>
 </table>
 
-<% if (uploadResults) {%>
+<% if (uploadResults.length > 0) {%>
     <div class="alert alert-warning" role="alert">
         <b>Here are the results we extracted from your file. Are they correct ?</b>
         <a type="button" class="btn btn-warning" href="/events/edit/<%- event.id%>">
@@ -76,4 +76,9 @@
         <%}%>
         </tbody>
     </table>
+<%} else {%>
+    <div class="alert alert-warning">
+        <i class="fa fa-exclamation-triangle text-warning"></i>
+        &nbsp; No results have been uploaded yet. Please upload results for the event using the <a href="/events/edit/<%-event.id%>">edition form</a>
+    </div>
 <%}%>
