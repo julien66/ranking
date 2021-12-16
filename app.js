@@ -93,4 +93,52 @@ app.locals.errorDescription = function(field, errors) {
   }
 }
 
-module.exports = app;
+app.locals.findMimeIcon = function(mimeType) {
+  // List of official MIME Types: http://www.iana.org/assignments/media-types/media-types.xhtml
+  var icon_classes = {
+    // Media
+    image: "fa-file-image-o",
+    audio: "fa-file-audio-o",
+    video: "fa-file-video-o",
+    // Documents
+    "application/pdf": "fa-file-pdf",
+    "application/msword": "fa-file-word",
+    "application/vnd.ms-word": "fa-file-word",
+    "application/vnd.oasis.opendocument.text": "fa-file-word",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml":
+        "fa-file-word",
+    "application/vnd.ms-excel": "fa-file-excel",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml":
+        "fa-file-excel",
+    "application/vnd.oasis.opendocument.spreadsheet": "fa-file-excel",
+    "application/vnd.ms-powerpoint": "fa-file-powerpoint",
+    "application/vnd.openxmlformats-officedocument.presentationml":
+        "fa-file-powerpoint",
+    "application/vnd.oasis.opendocument.presentation": "fa-file-powerpoint",
+    "text/plain": "fa-file-text",
+    "text/html": "fa-file-code",
+    "application/json": "fa-file-code",
+    // Archives
+    "application/gzip": "fa-file-archive",
+    "application/zip": "fa-file-archive"
+  };
+
+  for (var key in icon_classes) {
+    if (icon_classes.hasOwnProperty(key)) {
+      if (mimeType.search(key) === 0) {
+        // Found it
+        return icon_classes[key];
+      }
+    } else {
+      return "fa-file";
+    }
+  }
+}
+
+
+app.locals.sizeToKo = function(size) {
+  return (size/1000) + ' Ko';
+}
+
+
+  module.exports = app;

@@ -53,8 +53,18 @@
     <div class="input-group mb-3">
         <label class="input-group-text" for="ranking">Ranking</label>
         <input type="file" class="form-control <%- fieldError("ranking", errors) %>" name="ranking">
+        <% if (edit['fileResult.originalname']) {%>
+            <div class="input-group-text">
+                <i class="text-success fa <%- findMimeIcon(edit['fileResult.mimetype']) %>"></i>
+                &nbsp; <%- edit['fileResult.originalname']%> &nbsp; <%- sizeToKo(edit['fileResult.size']) %>
+            </div>
+        <% } %>
     </div>
     <div class="text-danger"><%- errorDescription("ranking", errors) %></div>
+    <% if (edit['fileResult.originalname']) {%>
+        <div class="form-text"><i class="fa fa-exclamation-triangle text-warning"></i> Uploading a new file will <b>erase</b> current results for the event</div>
+        <br>
+    <% } %>
 
     <button class="btn btn-primary" type="submit">Save event</button>
 </form>
