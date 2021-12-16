@@ -14,11 +14,9 @@ class ProcessResults {
         this.landPageError = (req.params.id) ? '/events/edit/' + req.params.id : '/events';
         this.empty = true;
 
-        if (!req.files || req.files.length < 1) {
-            if (file) {
-                this.init(file);
-            }
-        } else {
+        if (file) {
+            this.init(file);
+        } else if(req.files.length > 0) {
             this.init(req.files[0]);
             this.eventId = req.params.id ? req.params.id : false;
         }

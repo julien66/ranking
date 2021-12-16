@@ -85,7 +85,7 @@ router.post(['/', '/:id'], multer().any(), function(req, res, next) {
     }
     // Add flag. Get code from Name
     req.body.flag = getCode(req.body.country);
-    var result = new ProcessResults(req ,res);
+    var result = new ProcessResults(req);
 
     if (parseInt(req.params.id)) {
         Event.update(req.body, {where : {id : parseInt(req.params.id)}})
@@ -107,8 +107,11 @@ router.post(['/', '/:id'], multer().any(), function(req, res, next) {
                             res.redirect('/events/edit/' + req.params.id);
                         });
                     //req.session.results = result.getResults();
-                } else {
+                } else if (result.errors.length > 0) {
                     next(result.notifyError());
+                }
+                else {
+                    res.redirect('/events');
                 }
             })
             .catch(function(err) {
@@ -124,14 +127,16 @@ router.post(['/', '/:id'], multer().any(), function(req, res, next) {
                             res.redirect('/events/page/' + req.params.id + '/check');
                         })
                         .catch(function(err){
-                            console.log("Creating new file result failed");
+                            console.log("Creating new file result failed" .red);
                         });
-                } else {
+                } else if (results.errors.length > 0){
                     next(result.notifyError());
+                } else {
+                    res.redirect('/events');
                 }
             })
             .catch(function (err) {
-                console.log("Event creation failed");
+                console.log("Event creation failed" .red);
             });
     }
 });
