@@ -54,14 +54,22 @@
 
 <% if (uploadResults.length > 0) {%>
     <div class="alert alert-warning" role="alert">
-        <b>Here are the results we extracted from your file. Are they correct ?</b>
-        <a type="button" class="btn btn-warning" href="/events/edit/<%- event.id%>">
-            <i class="fa fa-times"></i> No. Back to upload
-        </a>
+        <b>Here are the results we extracted from your file. Are they correct ?</b><br>
+        <div class="row">
+        <form class="col-6" action="/events/page/<%-event.id%>/check" method="POST" role="form" class="form-horizontal">
+            <input type="hidden" name="check" value="0"/>
+            <button type="submit" class="btn btn-warning">
+                <i class="fa fa-times"></i> No. Back to upload
+            </button>
+        </form>
 
-        <a type="button" class="btn btn-success" href="/results/<%- event.id%>">
-            <i class="fa fa-check"></i> Save results !
-        </a>
+        <form class="col-6" action="/events/page/<%-event.id%>/check" method="POST" role="form" class="form-horizontal">
+            <input type="hidden" name="check" value="1"/>
+            <button type="submit" class="btn btn-success">
+                <i class="fa fa-check"></i> Save results !
+            </button>
+        </form>
+        </div>
     </div>
     <table class="table table-responsive table-bordered">
         <thead>

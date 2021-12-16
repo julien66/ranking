@@ -52,7 +52,7 @@ module.exports = (sequelize, type) => {
             validate : {isUrl : true},
         },
         rankStatus : {
-            type : type.BOOL,
+            type : type.BOOLEAN,
             defaultValue : false,
         }
     });

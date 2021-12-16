@@ -158,6 +158,24 @@ router.get(['/page/:id', '/page/:id/check'], function(req, res) {
     })
 });
 
+router.post(['/page/:id/check'], function(req, res) {
+    var check = parseInt(req.body.check);
+    if (check) {
+        // @Todo. Store it all as proper results !!!
+        res.redirect('/events/page/' + req.params.id + '/check');
+    }   else {
+        FileResult.destroy({where : {eventId : req.params.id}})
+            .then(del => {
+                res.redirect('/events/edit/' + req.params.id);
+            })
+            .catch(function(err) {
+                console.log(err)
+                console.log('FileResult Deletion failed' .red);
+            })
+    }
+});
+
+
 router.get('/map', function(req, res) {
     res.render('events_map', {title : 'Events Map', page : 'map'});
 });
