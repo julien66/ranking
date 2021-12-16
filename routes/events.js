@@ -45,7 +45,7 @@ router.get(['/', '/edit/:id'], function(req, res, next) {
         Event.findAll({raw : true, attributes: ['id', 'country', 'flag', 'name', 'start', 'end', 'website'], include: [{model : EventType, attributes: ['name']}]}),
     ];
     if (parseInt(req.params.id)) {
-        promises.push(Event.findOne({'where' : {id : parseInt(req.params.id)}, include : {model : FileResult}, 'raw' : true}));
+        promises.push(Event.findOne({'where' : {id : parseInt(req.params.id)}, include : {model : FileResult, attributes : {exclude : ['buffer']}}, 'raw' : true}));
     }
     Promise.all(promises).then(results => {
                 let edit = (results.length > 2) ? results[2] : null;
