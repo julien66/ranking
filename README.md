@@ -26,10 +26,19 @@ Nodejs, Express, MYSQL or POSTGRESQL, sequelize, leaflet, bootstrap.
 - Different ranking based on different type of results.
 
 ### Work update : ALPHA version
-- Event creation / update / delete is ok (Only parsing results no storage atm).
-- Event Types creation / deletiong is ok. (Need update at least for colors).
-- Planning calendar is ok. (Need years navigation + event names).
+- Event creation / update / delete is ok.
+- Results storage along with confirmation page and form.
+- Quick retrieve of pilots at result form submit.
+- Event Types creation / deletion is ok. (Need update at least for colors).
+- Planning calendar need more work. (Need years navigation + event names).
 - Map is displyaing created events. (need a related timeline below).
-- Time to store athletes and their results.
+- Athlete and results are stored.
+- Elos (both overall and local) are calculated and stored.
+
+- Current implementation face multiplayer elo statistical trouble.
+Offering to gain / loose too much points in case of event with many contestant. Need fix
+  
+- Event page display Elos gained / Loss during event.
+- No overall pages at the moment @todo. 
 
 Non profit. Licence GPL. Help needed.
