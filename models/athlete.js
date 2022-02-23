@@ -49,9 +49,8 @@ module.exports = (sequelize, type) => {
         civlId : {
             type: type.STRING,
         },
-        code : {
+        concat : {
             type : type.STRING,
-            primaryKey: true,
         },
     });
 };

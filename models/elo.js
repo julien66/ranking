@@ -1,16 +1,15 @@
 module.exports = (sequelize, type) => {
-    return sequelize.define('result', {
+    return sequelize.define('elo', {
         id: {
             type: type.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
-        rank: {
+        eloStart: {
             type: type.INTEGER,
-            allowNull : false,
-            validate : {
-                notNull : true
-            }
         },
+        eloEnd :{
+            type: type.INTEGER,
+        }
     });
 };

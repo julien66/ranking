@@ -39,6 +39,7 @@
         <th scope="col">Start</th>
         <th scope="col">End</th>
         <th scope="col">Website</th>
+        <th scope="col">Results</th>
         <th scope="col">Delete</th>
         <th scope="col">Edit</th>
     </tr>
@@ -69,6 +70,9 @@
             </td>
             <td>
                 <a href="<%= events[i].website %>"><%= events[i].website %></a>
+            </td>
+            <td>
+                <%= events[i].rankStatus%>
             </td>
             <td>
                 <button class="btn btn-danger" data-href="/events/delete/<%= events[i].id %>" data-bs-toggle="modal"

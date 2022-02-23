@@ -1,92 +1,17 @@
 <link rel="stylesheet" href="/flagpack/flagpack.css"/>
-
 <table class="table table-responsive table-bordered">
-    <thead>
+        <% for (const elo of elos) { %>
     <tr>
-        <th scope="col">id</th>
-        <th scope="col">Country</th>
-        <th scope="col">Name</th>
-        <th scope="col">Type</th>
-        <th scope="col">Start</th>
-        <th scope="col">End</th>
-        <th scope="col">Website</th>
-        <th scope="col">Delete</th>
-        <th scope="col">Edit</th>
+            <td><%- elo.rank %></td>
+            <td><span class="fp fp-md <%- elo.flag.toLowerCase() %>"></span></td>
+            <td><%- elo.firstName %></td>
+            <td><%- elo.lastName.toUpperCase() %></td>
+            <td><%- elo.gender %></td>
+            <% for (rankElo of elo.rankElos) {%>
+                <td>
+                    <%- rankElo[1] %> ==> <%- rankElo[2] %>
+                </td>
+            <% }%>
     </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>
-            <%= event.id %>
-        </td>
-        <td>
-            <span class="fp fp-md <%= event.flag.toLowerCase() %>" alt="<%= event.country %>"></span>
-        </td>
-        <td>
-            <%= event.name %>
-        </td>
-        <td>
-            <%= event['eventType.name'] %>
-        </td>
-        <td>
-            <%= event.start.toLocaleDateString() %>
-        </td>
-        <td>
-            <%= event.end.toLocaleDateString() %>
-        </td>
-        <td>
-            <a href="<%= event.website %>"><%= event.website %></a>
-        </td>
-        <td>
-            <button class="btn btn-danger" data-href="/events/delete/<%= event.id %>" data-bs-toggle="modal"
-                    data-bs-target="#confirm-delete">
-                <i class="fa fa-trash"></i>
-            </button>
-        </td>
-        <td>
-            <a type="button" class="btn btn-primary" href="/events/edit/<%= event.id %>">
-                <i class="fa fa-edit"></i>
-            </a>
-        </td>
-    </tr>
-    </tbody>
+        <% } %>
 </table>
-
-<% if (uploadResults.length > 0) {%>
-    <div class="alert alert-warning" role="alert">
-        <b>Here are the results we extracted from your file. Are they correct ?</b><br>
-        <div class="row">
-        <form class="col-6" action="/events/page/<%-event.id%>/check" method="POST" role="form" class="form-horizontal">
-            <input type="hidden" name="check" value="0"/>
-            <button type="submit" class="btn btn-warning">
-                <i class="fa fa-times"></i> No. Back to upload
-            </button>
-        </form>
-
-        <form class="col-6" action="/events/page/<%-event.id%>/check" method="POST" role="form" class="form-horizontal">
-            <input type="hidden" name="check" value="1"/>
-            <button type="submit" class="btn btn-success">
-                <i class="fa fa-check"></i> Save results !
-            </button>
-        </form>
-        </div>
-    </div>
-    <table class="table table-responsive table-bordered">
-        <thead>
-        </thead>
-        <tbody>
-        <% for (var i = 0; i < uploadResults.length; i++) {%>
-            <tr>
-                <% for (var y = 0; y < uploadResults[i].length; y++) {%>
-                    <td><%-uploadResults[i][y]%></td>
-                <% } %>
-            </tr>
-        <%}%>
-        </tbody>
-    </table>
-<%} else {%>
-    <div class="alert alert-warning">
-        <i class="fa fa-exclamation-triangle text-warning"></i>
-        &nbsp; No results have been uploaded yet. Please upload results for the event using the <a href="/events/edit/<%-event.id%>">edition form</a>
-    </div>
-<%}%>

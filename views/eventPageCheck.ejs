@@ -1,0 +1,157 @@
+<link rel="stylesheet" href="/flagpack/flagpack.css"/>
+<script>
+    $(document).ready(function() {
+        $('td.known').each(function(index) {
+            let td = $(this);
+            let input = td.find("input").val();
+            let concat = input.toLowerCase().replace(/\s/g, '').replace(/[^a-zA-Z ]/g, "");
+            checkId(concat, td);
+
+        });
+
+        $('.identif').change(function() {
+            console.log('change');
+            let tr = $(this).closest('tr');
+            tr.find('.id-mark').remove();
+            checkId(getConcat(tr), tr.find('.known'));
+    })
+
+        function getConcat(tr) {
+            let input = tr.find('[name="lastName"]').val() + tr.find('[name="firstName"]').val() + tr.find('[name="gender"]').val() + tr.find('[name="country"]').val();
+            return input.toLowerCase().replace(/\s/g, '').replace(/[^a-zA-Z ]/g, "");
+        }
+
+        function checkId (concat, td) {
+            $.get('/athletes/exist/' + concat, null, function(data, status, xhr) {
+                if (!data) {
+                    td.append('<i class="fa fa-times fa-2x text-warning id-mark" title="Unknwon Pilot"></i>');
+                } else {
+                    td.append('<i class="fa fa-check fa-2x text-success id-mark" title="Knwon Pilot"></i>');
+                }
+            });
+        }
+    });
+
+</script>
+
+<table class="table table-responsive table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">id</th>
+        <th scope="col">Country</th>
+        <th scope="col">Name</th>
+        <th scope="col">Type</th>
+        <th scope="col">Start</th>
+        <th scope="col">End</th>
+        <th scope="col">Website</th>
+        <th scope="col">Delete</th>
+        <th scope="col">Edit</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <%= event.id %>
+        </td>
+        <td>
+            <span class="fp fp-md <%= event.flag.toLowerCase() %>" alt="<%= event.country %>"></span>
+        </td>
+        <td>
+            <%= event.name %>
+        </td>
+        <td>
+            <%= event['eventType.name'] %>
+        </td>
+        <td>
+            <%= event.start.toLocaleDateString() %>
+        </td>
+        <td>
+            <%= event.end.toLocaleDateString() %>
+        </td>
+        <td>
+            <a href="<%= event.website %>"><%= event.website %></a>
+        </td>
+        <td>
+            <button class="btn btn-danger" data-href="/events/delete/<%= event.id %>" data-bs-toggle="modal"
+                    data-bs-target="#confirm-delete">
+                <i class="fa fa-trash"></i>
+            </button>
+        </td>
+        <td>
+            <a type="button" class="btn btn-primary" href="/events/edit/<%= event.id %>">
+                <i class="fa fa-edit"></i>
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<% if (uploadResults.length > 0) {%>
+    <div class="alert alert-warning" role="alert">
+        <div class="row">
+            <b>Here are the results we extracted from your file. Are they correct ?</b><br>
+        <form class="col-6" action="/events/page/<%-event.id%>/check" method="POST" role="form" class="form-horizontal">
+            <input type="hidden" name="check" value="0"/>
+            <button type="submit" class="btn btn-warning">
+                <i class="fa fa-times"></i> No. Back to upload
+            </button>
+        </form>
+        </div>
+    </div>
+    <form class="col-6" action="/events/page/<%-event.id%>/check" method="POST" role="form" class="form-horizontal">
+        <input type="hidden" name="check" value="1"/>
+    <table class="table table-responsive table-bordered">
+        <thead>
+            <tr>
+                <% for (var i = 0; i < headerResults.length; i++) {%>
+                    <td><%-headerResults[i] %></td>
+                <% } %>
+                <td>Known Pilot</td>
+            </tr>
+        </thead>
+        <tbody>
+        <% for (var i = 0; i < uploadResults.length; i++) {%>
+            <tr class="rank">
+                <% for (var y = 0; y < uploadResults[i].length; y++) {%>
+                    <% if (y == 1) { %>
+                        <td>
+                            <input type="text" class="identif" name="lastName" value="<%- uploadResults[i][y]%>"/>
+                        </td>
+                    <% } else if (y == 2) { %>
+                            <td>
+                                <input type="text" class="identif" name="firstName" value="<%- uploadResults[i][y]%>"/>
+                            </td>
+                    <% } else if (y == 3) { %>
+                            <td>
+                                <select class="identif" name="gender">
+                                    <option value="F" <%- checkSelectedNoCase("F", uploadResults[i][y]) %>>F</option>
+                                    <option value="M" <%- checkSelectedNoCase("M", uploadResults[i][y]) %>>M</option>
+                                </select>
+                            </td>
+                        <% } else if (y == 4) { %>
+                            <td>
+                                <select class="identif" name="country">
+                                <%- formatCodeOption(codeList, uploadResults[i][y])%>
+                                </select>
+                            </td>
+                    <% } else { %>
+                        <td><%-uploadResults[i][y]%></td>
+                    <% } %>
+                <% } %>
+                    <td class="known">
+                        <input type="hidden" name="codeId" value="<%-uploadResults[i][1]%><%-uploadResults[i][2]%><%- uploadResults[i][3]%><%- uploadResults[i][4]%>">
+                    </td>
+            </tr>
+        <%}%>
+        </tbody>
+    </table>
+        <button type="submit" class="btn btn-success float-end mb-2 p-2">
+            <i class="fa fa-check"></i> Save results !
+        </button>
+    </form>
+<%} else {%>
+<div class="alert alert-warning">
+        <i class="fa fa-exclamation-triangle text-warning"></i>
+        &nbsp; No results have been uploaded yet. Please upload results for the event using the <a href="/events/edit/<%-event.id%>">edition form</a>
+    </div>
+<%}%>

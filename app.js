@@ -50,6 +50,7 @@ app.use(function(req, res, next) {
 var formLogger = function(error, req, res, next) {
   if (error.type === 'form') {
     req.session.errors = error.errors;
+    req.session.form = req.body;
     res.redirect(error.landPage);
   }
   next(error);
@@ -140,5 +141,22 @@ app.locals.sizeToKo = function(size) {
   return (size/1000) + ' Ko';
 }
 
+app.locals.checkSelectedNoCase = function(input, search) {
+  return (input.toLowerCase() == search.toLowerCase()) ? 'selected' : '';
+}
+
+app.locals.formatCodeOption = function(codes, country) {
+  let output = ""
+  for (code in codes) {
+      output += '<option value="'+ code +'"';
+      if (code.toLowerCase() == country.toLowerCase()) {
+        output += ' selected>';
+      } else {
+        output += '>';
+      }
+      output += codes[code].toUpperCase() + "</option>";
+  }
+  return output;
+}
 
   module.exports = app;

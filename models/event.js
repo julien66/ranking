@@ -45,15 +45,16 @@ module.exports = (sequelize, type) => {
             type : type.BLOB,
         },
         latlon : {
-          type : type.GEOMETRY('POINT', 4326),
+            type : type.GEOMETRY('POINT', 4326),
         },
         website : {
             type : type.STRING,
-            validate : {isUrl : true},
+            allowNull : true,
+            validate : {'isUrl' : true},
         },
         rankStatus : {
-            type : type.BOOLEAN,
-            defaultValue : false,
+            type : type.INTEGER,
+            defaultValue : 0,
         }
     });
 };
